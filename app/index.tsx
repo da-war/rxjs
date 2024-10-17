@@ -5,23 +5,32 @@ import { Observable } from "rxjs";
 
 const index = () => {
   const notError = false;
-  const numberObservable = new Observable((subscriber) => {
-    if (notError) {
+  // Create an observable
+  const numberObservable: Observable<number> = new Observable<number>(
+    (subscriber) => {
       subscriber.next(1);
       subscriber.next(2);
       subscriber.next(3);
       subscriber.complete();
-    } else {
-      subscriber.error("An error occurred");
     }
-  });
+  );
 
-  // Subscribe to the observable
+  // Subscribe to the observable with inline observer
   numberObservable.subscribe({
-    next: (value) => console.log(`Received value: ${value}`),
-    error: (error) => console.log(`Error: ${error}`),
+    next: (value: number) => console.log(`Received value: ${value}`),
     complete: () => console.log("Observable completed"),
   });
+
+  // Define an observer with explicit types
+  const observer = {
+    next: (value: number) => console.log(`Observer received: ${value}`),
+    error: (err: any) => console.error(`Observer error: ${err}`),
+    complete: () => console.log("Observer received completion"),
+  };
+
+  // Subscribe using the defined observer
+  numberObservable.subscribe(observer);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Text>index</Text>
