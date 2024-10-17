@@ -15,11 +15,11 @@ const index = () => {
     }
   );
 
-  // Subscribe to the observable with inline observer
-  numberObservable.subscribe({
-    next: (value: number) => console.log(`Received value: ${value}`),
-    complete: () => console.log("Observable completed"),
-  });
+  // // Subscribe to the observable with inline observer
+  // numberObservable.subscribe({
+  //   next: (value: number) => console.log(`Received value: ${value}`),
+  //   complete: () => console.log("Observable completed"),
+  // });
 
   // Define an observer with explicit types
   const observer = {
