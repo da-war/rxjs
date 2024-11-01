@@ -1,41 +1,41 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { Observable } from "rxjs";
 
+const observer = {
+  next: (value: any) => console.log(value + " World"),
+  error: (error: any) => console.log(error),
+  complete: () => console.log("completed"),
+};
+
 const index = () => {
-  const notError = false;
-  // Create an observable
-  const numberObservable: Observable<number> = new Observable<number>(
-    (subscriber) => {
-      subscriber.next(1);
-      subscriber.next(2);
-      subscriber.next(3);
-      subscriber.complete();
-    }
-  );
+  const observable = new Observable((subscriber) => {
+    let count = 0;
+    const id = setInterval(() => {
+      subscriber.next(count);
+      count++;
+      if (count > 5) {
+        subscriber.complete();
+      }
+    }, 1000);
 
-  // // Subscribe to the observable with inline observer
-  // numberObservable.subscribe({
-  //   next: (value: number) => console.log(`Received value: ${value}`),
-  //   complete: () => console.log("Observable completed"),
-  // });
-
-  // Define an observer with explicit types
-  const observer = {
-    next: (value: number) => console.log(`Observer received: ${value}`),
-    error: (err: any) => console.error(`Observer error: ${err}`),
-    complete: () => console.log("Observer received completion"),
-  };
-
-  // Subscribe using the defined observer
-  numberObservable.subscribe(observer);
-
+    return () => {
+      console.log("unsubscribed");
+      clearInterval(id);
+    };
+  });
+  console.log("before");
+  observable.subscribe(observer);
+  console.log("after");
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView>
       <Text>index</Text>
     </SafeAreaView>
   );
 };
 
 export default index;
+
+const styles = StyleSheet.create({});
