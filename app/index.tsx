@@ -27,7 +27,12 @@ const index = () => {
     };
   });
   console.log("before");
-  observable.subscribe(observer);
+  const subscription = observable.subscribe(observer);
+  const subscriptionTwo = observable.subscribe(observer);
+  subscription.add(subscriptionTwo);
+  setTimeout(() => {
+    subscription.unsubscribe();
+  }, 3500);
   console.log("after");
   return (
     <SafeAreaView>
