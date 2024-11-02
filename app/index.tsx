@@ -4,36 +4,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Observable } from "rxjs";
 
-const observer = {
-  next: (value: any) => console.log(value + " World"),
+const myObserver = {
+  next: (value: any) => console.log(value + 1),
   error: (error: any) => console.log(error),
-  complete: () => console.log("completed"),
+  complete: () => console.log("Completed"),
 };
 
 const index = () => {
-  const observable = new Observable((subscriber) => {
-    let count = 0;
-    const id = setInterval(() => {
-      subscriber.next(count);
-      count++;
-      if (count > 5) {
-        subscriber.complete();
-      }
-    }, 1000);
-
-    return () => {
-      console.log("unsubscribed");
-      clearInterval(id);
-    };
+  const observerable = new Observable((subscriber) => {
+    subscriber.next(1);
+    subscriber.next(2);
+    subscriber.next(3);
+    subscriber.complete();
   });
-  console.log("before");
-  const subscription = observable.subscribe(observer);
-  const subscriptionTwo = observable.subscribe(observer);
-  subscription.add(subscriptionTwo);
-  setTimeout(() => {
-    subscription.unsubscribe();
-  }, 3500);
-  console.log("after");
+
+  observerable.subscribe(myObserver);
+
   return (
     <SafeAreaView>
       <Text>index</Text>
