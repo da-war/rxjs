@@ -12,13 +12,26 @@ const myObserver = {
 
 const index = () => {
   const observerable = new Observable((subscriber) => {
-    subscriber.next(1);
-    subscriber.next(2);
-    subscriber.next(3);
-    subscriber.complete();
+    let count = 0;
+    const id = setInterval(() => {
+      subscriber.next(count++);
+      if (count > 5) {
+        subscriber.complete();
+      }
+    }, 1000);
+
+    return () => {
+      console.log("Unsubscribed");
+      clearInterval(id);
+    };
   });
 
-  observerable.subscribe(myObserver);
+  const mysubscription = observerable.subscribe(myObserver);
+  const mysubscription2 = observerable.subscribe(myObserver);
+
+  setTimeout(() => {
+    mysubscription.unsubscribe();
+  }, 3500);
 
   return (
     <SafeAreaView>
