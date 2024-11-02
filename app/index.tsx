@@ -1,7 +1,7 @@
 import { Button, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { from } from "rxjs";
+import { from, of } from "rxjs";
 
 const observer = {
   next: (value: any) => console.log(value),
@@ -15,7 +15,7 @@ const index = () => {
   // const source$=fromEvent(document,'click'); is for web
 
   const handlePress = () => {
-    const source$ = from([1, 2, 3, 4, 5]);
+    const source$ = of(1, 2, 3, 4, 5);
     const mySubscription = source$.subscribe(observer);
     const mySubscription2 = source$.subscribe(observer);
 
