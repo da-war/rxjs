@@ -1,41 +1,39 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { from } from "rxjs";
 
-import { Observable } from "rxjs";
-
-const myObserver = {
-  next: (value: any) => console.log(value + 1),
+const observer = {
+  next: (value: any) => console.log(value),
   error: (error: any) => console.log(error),
-  complete: () => console.log("Completed"),
+  complete: () => console.log("completed"),
 };
 
 const index = () => {
-  const observerable = new Observable((subscriber) => {
-    let count = 0;
-    const id = setInterval(() => {
-      subscriber.next(count++);
-      if (count > 5) {
-        subscriber.complete();
-      }
-    }, 1000);
+  // const source$=fromEvent(document,'click');
+  // alternative in react native
+  // const source$=fromEvent(document,'click'); is for web
 
-    return () => {
-      console.log("Unsubscribed");
-      clearInterval(id);
-    };
-  });
+  const handlePress = () => {
+    const source$ = from([1, 2, 3, 4, 5]);
+    const mySubscription = source$.subscribe(observer);
+    const mySubscription2 = source$.subscribe(observer);
 
-  const mysubscription = observerable.subscribe(myObserver);
-  const mysubscription2 = observerable.subscribe(myObserver);
+    setTimeout(() => {
+      console.log("unsubscribing mySubscription");
+      mySubscription.unsubscribe();
+    }, 3000);
 
-  setTimeout(() => {
-    mysubscription.unsubscribe();
-  }, 3500);
+    setTimeout(() => {
+      console.log("unsubscribing mySubscription2");
+      mySubscription2.unsubscribe();
+    }, 5000);
+  };
 
   return (
     <SafeAreaView>
       <Text>index</Text>
+      <Button title="click" onPress={() => handlePress()} />
     </SafeAreaView>
   );
 };
